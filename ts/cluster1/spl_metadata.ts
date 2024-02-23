@@ -5,7 +5,6 @@ import {
   CreateMetadataAccountV3InstructionAccounts,
   CreateMetadataAccountV3InstructionArgs,
   DataV2Args,
-  MPL_TOKEN_METADATA_PROGRAM_ID,
 } from "@metaplex-foundation/mpl-token-metadata";
 import {
   createSignerFromKeypair,
@@ -15,35 +14,41 @@ import {
 import { PublicKey } from "@solana/web3.js";
 
 // Define our Mint address
-const mint = publicKey("6p1Ad8EgNr11GAe1J8v1cGQBhmMNHiNAvKBjn9X5MJRW");
+const mint = publicKey("BvrY7utmPBGFwQQhdJkKHfziorchVm82GYTrSxoVjfjz");
+// const tokenMetadataProgramId = new AnchorError.web3.PublicKey(
+//   "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
+// );
+// const [metadata] = PublicKey.findProgramAddressSync(
+//   [
+//     Buffer.from("metadata"),
+//     new PublicKey(tokenMetadataProgramId).toBuffer(),
+//     new PublicKey(mint).toBuffer(),
+//   ],
+//   new PublicKey(tokenMetadataProgramId)
+// );
 
-// Create a UMI connection
+// // Create a UMI connection
+// const metadataSeeds = [
+//   Buffer.from("metadata"),
+//   "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s",
+// ];
 const umi = createUmi("https://api.devnet.solana.com");
 const keypair = umi.eddsa.createKeypairFromSecretKey(new Uint8Array(wallet));
 const signer = createSignerFromKeypair(umi, keypair);
-umi.use(signerIdentity(createSignerFromKeypair(umi, keypair)));
+umi.use(signerIdentity(signer));
 
 (async () => {
   try {
     // Start here
-    const [metadata] = PublicKey.findProgramAddressSync(
-      [
-        Buffer.from("metadata"),
-        new PublicKey(MPL_TOKEN_METADATA_PROGRAM_ID).toBuffer(),
-        new PublicKey(mint).toBuffer(),
-      ],
-      new PublicKey(MPL_TOKEN_METADATA_PROGRAM_ID)
-    );
 
     let accounts: CreateMetadataAccountV3InstructionAccounts = {
-      metadata: publicKey(metadata),
       mint,
       mintAuthority: signer,
     };
     let data: DataV2Args = {
       name: "Reiner Braun",
       symbol: "RB",
-      uri: "",
+      uri: "https://arweave.net/1234",
       sellerFeeBasisPoints: 500,
       creators: null,
       collection: null,
