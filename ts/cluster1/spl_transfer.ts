@@ -1,5 +1,11 @@
-import { Commitment, Connection, Keypair, LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js"
-import wallet from "../wba-wallet.json"
+import {
+  Commitment,
+  Connection,
+  Keypair,
+  LAMPORTS_PER_SOL,
+  PublicKey,
+} from "@solana/web3.js";
+import wallet from "../wba-wallet.json";
 import { getOrCreateAssociatedTokenAccount, transfer } from "@solana/spl-token";
 
 // We're going to import our keypair from the wallet file
@@ -10,19 +16,36 @@ const commitment: Commitment = "confirmed";
 const connection = new Connection("https://api.devnet.solana.com", commitment);
 
 // Mint address
-const mint = new PublicKey("<mint address>");
+const mint = new PublicKey("9fJaRByp97d9vtWfhoYTFbPCjSknPXXJScnU8CnvfDeF");
 
 // Recipient address
-const to = new PublicKey("<receiver address>");
+const to = new PublicKey("C9ZZ4ggdMceMGPZjuseTapyBR2n7WMFfgLiVBwBd7hFV");
 
 (async () => {
-    try {
-        // Get the token account of the fromWallet address, and if it does not exist, create it
+  const from_ata = await getOrCreateAssociatedTokenAccount(
+    connection,
+    keypair,
+    mint,
+    keypair.publicKey
+  );
 
-        // Get the token account of the toWallet address, and if it does not exist, create it
+  const to_ata = await getOrCreateAssociatedTokenAccount(
+    connection,
+    keypair,
+    mint,
+    to
+  );
 
-        // Transfer the new token to the "toTokenAccount" we just created
-    } catch(e) {
-        console.error(`Oops, something went wrong: ${e}`)
-    }
+  const tx = transfer(
+    connection,
+    keypair,
+    from_ata.address,
+    to_ata.address,
+    keypair.publicKey,
+    1000
+  );
+
+  console.log(
+    `Succesfully Minted!. Transaction Here: https://explorer.solana.com/tx/${tx}?cluster=devnet`
+  );
 })();
