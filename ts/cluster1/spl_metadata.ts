@@ -14,10 +14,10 @@ import {
 import { PublicKey } from "@solana/web3.js";
 
 // Define our Mint address
-const mint = publicKey("BvrY7utmPBGFwQQhdJkKHfziorchVm82GYTrSxoVjfjz");
-// const tokenMetadataProgramId = new AnchorError.web3.PublicKey(
-//   "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
-// );
+const mint = publicKey("9fJaRByp97d9vtWfhoYTFbPCjSknPXXJScnU8CnvfDeF");
+const tokenMetadataProgramId = publicKey(
+  "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
+);
 // const [metadata] = PublicKey.findProgramAddressSync(
 //   [
 //     Buffer.from("metadata"),
@@ -35,7 +35,7 @@ const mint = publicKey("BvrY7utmPBGFwQQhdJkKHfziorchVm82GYTrSxoVjfjz");
 const umi = createUmi("https://api.devnet.solana.com");
 const keypair = umi.eddsa.createKeypairFromSecretKey(new Uint8Array(wallet));
 const signer = createSignerFromKeypair(umi, keypair);
-umi.use(signerIdentity(signer));
+umi.use(signerIdentity(createSignerFromKeypair(umi, keypair)));
 
 (async () => {
   try {
